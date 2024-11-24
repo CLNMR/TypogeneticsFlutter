@@ -3,7 +3,27 @@ import 'base.dart';
 import 'enzyme.dart';
 
 class Strand {
-  Strand(this.bases);
+  Strand({List<Base?>? bases}) : bases = bases ?? [];
+
+  factory Strand.fromStr(String str) {
+    final bases = str.split('').map((e) {
+      switch (e) {
+        case 'A':
+          return Base.A;
+        case 'T':
+          return Base.T;
+        case 'C':
+          return Base.C;
+        case 'G':
+          return Base.G;
+        case ' ':
+          return null;
+        default:
+          throw Exception('Invalid base: $e');
+      }
+    }).toList();
+    return Strand(bases: bases);
+  }
 
   List<Base?> bases;
 
@@ -16,7 +36,7 @@ class Strand {
     for (final base in reversed ? reversedBases : bases) {
       if (base == null) {
         if (currentList.isNotEmpty) {
-          splitBases.add(Strand(currentList));
+          splitBases.add(Strand(bases: currentList));
           currentList = [];
         }
       } else {
@@ -25,7 +45,7 @@ class Strand {
     }
 
     if (currentList.isNotEmpty) {
-      splitBases.add(Strand(currentList));
+      splitBases.add(Strand(bases: currentList));
     }
 
     return splitBases;
@@ -34,7 +54,7 @@ class Strand {
   List<Enzyme> translate() {
     final enzymes = <Enzyme>[];
     var currentAminoAcids = <AminoAcids>[];
-    for (var i = 0; i < bases.length - 2; i += 2) {
+    for (var i = 0; i < bases.length - 1; i += 2) {
       if (bases[i] == Base.A && bases[i + 1] == Base.A) {
         if (currentAminoAcids.isNotEmpty) {
           enzymes.add(Enzyme(currentAminoAcids));
@@ -50,5 +70,11 @@ class Strand {
       currentAminoAcids = [];
     }
     return enzymes;
+  }
+
+  @override
+  String toString() {
+    final baseStr = bases.map((base) => base?.name ?? ' ').join();
+    return baseStr;
   }
 }

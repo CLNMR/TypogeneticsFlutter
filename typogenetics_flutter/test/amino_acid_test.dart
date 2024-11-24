@@ -9,10 +9,10 @@ void main() {
 
   test('cut function works', () {
     // Arrange
-    final mainStrand =
-        Strand([Base.A, Base.C, Base.G, null, Base.T, Base.A, Base.A, Base.T]);
-    final secondaryStrand =
-        Strand([null, null, Base.C, Base.C, Base.A, Base.T, Base.T, null]);
+    final mainStrand = Strand(
+        bases: [Base.A, Base.C, Base.G, null, Base.T, Base.A, Base.A, Base.T]);
+    final secondaryStrand = Strand(
+        bases: [null, null, Base.C, Base.C, Base.A, Base.T, Base.T, null]);
     final strandsProcessing = StrandProcessing(
       mainStrand,
       5,
@@ -31,7 +31,7 @@ void main() {
 
   test('delete function works on single strand', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.C, Base.G]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.C, Base.G]);
     final strandsProcessing = StrandProcessing(mainStrand, 1);
 
     // Act
@@ -43,8 +43,8 @@ void main() {
 
   test('delete function works on both strands', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.C, Base.G]);
-    final secondaryStrand = Strand(<Base?>[Base.T, Base.G, Base.C]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.C, Base.G]);
+    final secondaryStrand = Strand(bases: <Base?>[Base.T, Base.G, Base.C]);
     final strandsProcessing =
         StrandProcessing(mainStrand, 1, secondaryStrand: secondaryStrand);
 
@@ -58,8 +58,9 @@ void main() {
 
   test('switch function works', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.T, Base.C, Base.G]);
-    final secondaryStrand = Strand(<Base?>[Base.T, Base.A, Base.G, Base.C]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.T, Base.C, Base.G]);
+    final secondaryStrand =
+        Strand(bases: <Base?>[Base.T, Base.A, Base.G, Base.C]);
     final strandsProcessing =
         StrandProcessing(mainStrand, 1, secondaryStrand: secondaryStrand);
 
@@ -74,7 +75,7 @@ void main() {
 
   test('move right function works', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.T, Base.C, Base.G]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.T, Base.C, Base.G]);
     final strandsProcessing = StrandProcessing(mainStrand, 2);
 
     // Act
@@ -92,7 +93,7 @@ void main() {
 
   test('move left function works', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, null, Base.C, Base.G]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, null, Base.C, Base.G]);
     final strandsProcessing = StrandProcessing(mainStrand, 3);
 
     // Act
@@ -110,7 +111,7 @@ void main() {
 
   test('insert A function works', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.T, Base.C, Base.G]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.T, Base.C, Base.G]);
     final strandsProcessing = StrandProcessing(mainStrand, 1);
 
     // Act
@@ -123,7 +124,7 @@ void main() {
 
   test('insert A in copy mode function works', () {
     // Arrange
-    final mainStrand = Strand(<Base?>[Base.A, Base.T, Base.C, Base.G]);
+    final mainStrand = Strand(bases: <Base?>[Base.A, Base.T, Base.C, Base.G]);
     final strandsProcessing = StrandProcessing(mainStrand, 1, copyMode: true);
 
     // Act
@@ -138,7 +139,8 @@ void main() {
 
   test('find pyrimidine to the right function works', () {
     // Arrange
-    final mainStrand = Strand([Base.T, Base.A, Base.A, Base.G, Base.C, Base.C]);
+    final mainStrand =
+        Strand(bases: [Base.T, Base.A, Base.A, Base.G, Base.C, Base.C]);
     final strandsProcessing = StrandProcessing(mainStrand, 0, copyMode: true);
 
     // Act
@@ -153,7 +155,8 @@ void main() {
 
   test('find pyrimidine to the right function works with null', () {
     // Arrange
-    final mainStrand = Strand([Base.T, Base.A, Base.A, null, Base.C, Base.C]);
+    final mainStrand =
+        Strand(bases: [Base.T, Base.A, Base.A, null, Base.C, Base.C]);
     final strandsProcessing = StrandProcessing(mainStrand, 0);
 
     // Act

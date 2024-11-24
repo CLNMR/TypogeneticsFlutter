@@ -5,8 +5,9 @@ class StrandProcessing {
   StrandProcessing(this.mainStrand, this.currentIndex,
       {Strand? secondaryStrand, this.copyMode = false})
       : secondaryStrand = secondaryStrand ??
-            Strand(List<Base?>.filled(mainStrand.bases.length, null,
-                growable: true));
+            Strand(
+                bases: List<Base?>.filled(mainStrand.bases.length, null,
+                    growable: true));
 
   final Strand mainStrand;
   final Strand secondaryStrand;

@@ -9,6 +9,9 @@ class Enzyme {
   final List<AminoAcids> aminoAcids;
 
   Base get attachesTo {
+    if (aminoAcids.length < 2) {
+      return Base.A;
+    }
     final index = aminoAcids.skip(1).take(aminoAcids.length - 2).fold(
         0, (index, aminoAcid) => index + aminoAcid.turnDirection.indexChange);
     return [Base.A, Base.G, Base.T, Base.C][index % 4];
@@ -30,4 +33,8 @@ class Enzyme {
   void add(AminoAcids aminoAcid) {
     aminoAcids.add(aminoAcid);
   }
+
+  @override
+  String toString() =>
+      '${aminoAcids.map((acid) => acid.name).join('-')} (${attachesTo.name})';
 }
