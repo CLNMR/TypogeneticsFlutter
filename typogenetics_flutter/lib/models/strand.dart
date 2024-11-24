@@ -5,13 +5,15 @@ import 'enzyme.dart';
 class Strand {
   Strand(this.bases);
 
-  final List<Base?> bases;
+  List<Base?> bases;
 
-  List<Strand> splitAtBreaks() {
+  List<Strand> splitAtBreaks({bool reversed = false}) {
     final splitBases = <Strand>[];
     var currentList = <Base>[];
 
-    for (final base in bases) {
+    final reversedBases = bases.reversed;
+
+    for (final base in reversed ? reversedBases : bases) {
       if (base == null) {
         if (currentList.isNotEmpty) {
           splitBases.add(Strand(currentList));

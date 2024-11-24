@@ -39,47 +39,144 @@ void _cut(StrandProcessing strandsProcessing) {
   final mainStrand = strandsProcessing.mainStrand;
   final secondaryStrand = strandsProcessing.secondaryStrand;
   mainStrand.bases.insert(index + 1, null);
-  secondaryStrand.bases.insert(mainStrand.bases.length - (index + 2), null);
+  secondaryStrand.bases.insert(index + 1, null);
 }
 
 /// Delete a base from a strand
-void _del(StrandProcessing strandsProcessing) {}
+void _del(StrandProcessing strandsProcessing) {
+  final index = strandsProcessing.currentIndex!;
+  final mainStrand = strandsProcessing.mainStrand;
+  final secondaryStrand = strandsProcessing.secondaryStrand;
+  final baseOfSecondaryStrand = secondaryStrand.bases[index];
+  if (baseOfSecondaryStrand == null) {
+    mainStrand.bases.removeAt(index);
+    secondaryStrand.bases.removeAt(index);
+  } else {
+    mainStrand.bases[index] = null;
+  }
+}
 
 /// Switch to other strand
-void _swi(StrandProcessing strandsProcessing) {}
+void _swi(StrandProcessing strandsProcessing) {
+  final mainStrand = strandsProcessing.mainStrand;
+  final secondaryStrand = strandsProcessing.secondaryStrand;
+  strandsProcessing.currentIndex =
+      mainStrand.bases.length - strandsProcessing.currentIndex! - 1;
+  final temp = mainStrand.bases;
+  mainStrand.bases = secondaryStrand.bases.reversed.toList();
+  secondaryStrand.bases = temp.reversed.toList();
+}
 
 /// Move one to the right
-void _mvr(StrandProcessing strandsProcessing) {}
+void _mvr(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, 1);
+}
 
 /// Move one to the left
-void _mvl(StrandProcessing strandsProcessing) {}
+void _mvl(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, -1);
+}
+
+void _move(StrandProcessing strandsProcessing, int offset) {
+  strandsProcessing.currentIndex = strandsProcessing.currentIndex! + offset;
+  if (strandsProcessing.currentIndex! <= 0 ||
+      strandsProcessing.currentIndex! >=
+          strandsProcessing.mainStrand.bases.length ||
+      strandsProcessing.mainStrand.bases[strandsProcessing.currentIndex!] ==
+          null) {
+    strandsProcessing.currentIndex = null;
+  } else {
+    if (strandsProcessing.copyMode) {
+      strandsProcessing.secondaryStrand.bases[strandsProcessing.currentIndex!] =
+          strandsProcessing
+              .mainStrand.bases[strandsProcessing.currentIndex!]!.complementary;
+    }
+  }
+}
 
 /// Turn on copy mode
-void _cop(StrandProcessing strandsProcessing) {}
+void _cop(StrandProcessing strandsProcessing) {
+  strandsProcessing.copyMode = true;
+  final index = strandsProcessing.currentIndex!;
+  final mainStrand = strandsProcessing.mainStrand;
+  final secondaryStrand = strandsProcessing.secondaryStrand;
+  secondaryStrand.bases[index] = mainStrand.bases[index]!.complementary;
+}
 
 /// Turn off copy mode
-void _off(StrandProcessing strandsProcessing) {}
+void _off(StrandProcessing strandsProcessing) {
+  strandsProcessing.copyMode = false;
+}
 
 /// Insert A
-void _ina(StrandProcessing strandsProcessing) {}
+void _ina(StrandProcessing strandsProcessing) {
+  _insertBase(strandsProcessing, Base.A);
+}
 
 /// Insert C
-void _inc(StrandProcessing strandsProcessing) {}
+void _inc(StrandProcessing strandsProcessing) {
+  _insertBase(strandsProcessing, Base.C);
+}
 
 /// Insert G
-void _ing(StrandProcessing strandsProcessing) {}
+void _ing(StrandProcessing strandsProcessing) {
+  _insertBase(strandsProcessing, Base.G);
+}
 
 /// Insert T
-void _int(StrandProcessing strandsProcessing) {}
+void _int(StrandProcessing strandsProcessing) {
+  _insertBase(strandsProcessing, Base.T);
+}
+
+void _insertBase(StrandProcessing strandsProcessing, Base base) {
+  final index = strandsProcessing.currentIndex! + 1;
+  final mainStrand = strandsProcessing.mainStrand;
+  final secondaryStrand = strandsProcessing.secondaryStrand;
+  mainStrand.bases.insert(index, base);
+  if (strandsProcessing.copyMode) {
+    secondaryStrand.bases.insert(index, base.complementary);
+  } else {
+    secondaryStrand.bases.insert(index, null);
+  }
+  strandsProcessing.currentIndex = index;
+}
 
 /// Search for Pyrimidine to the right
-void _rpy(StrandProcessing strandsProcessing) {}
+void _rpy(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, 1);
+  while (strandsProcessing.currentIndex != null &&
+      !strandsProcessing
+          .mainStrand.bases[strandsProcessing.currentIndex!]!.isPyrimidine) {
+    _move(strandsProcessing, 1);
+  }
+}
 
 /// Search for Purine to the right
-void _rpu(StrandProcessing strandsProcessing) {}
+void _rpu(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, 1);
+  while (strandsProcessing.currentIndex != null &&
+      !strandsProcessing
+          .mainStrand.bases[strandsProcessing.currentIndex!]!.isPurine) {
+    _move(strandsProcessing, 1);
+  }
+}
 
 /// Search for Pyrimidine to the left
-void _lpy(StrandProcessing strandsProcessing) {}
+void _lpy(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, -1);
+  while (strandsProcessing.currentIndex != null &&
+      !strandsProcessing
+          .mainStrand.bases[strandsProcessing.currentIndex!]!.isPyrimidine) {
+    _move(strandsProcessing, -1);
+  }
+}
 
 /// Search for Purine to the left
-void _lpu(StrandProcessing strandsProcessing) {}
+void _lpu(StrandProcessing strandsProcessing) {
+  _move(strandsProcessing, -1);
+  while (strandsProcessing.currentIndex != null &&
+      !strandsProcessing
+          .mainStrand.bases[strandsProcessing.currentIndex!]!.isPurine) {
+    _move(strandsProcessing, -1);
+  }
+}

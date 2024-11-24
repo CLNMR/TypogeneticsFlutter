@@ -15,12 +15,13 @@ class Enzyme {
   }
 
   List<Strand> process(Strand strand) {
-    final attachIndex = strand.bases.indexWhere((base) => base == attachesTo);
-    if (attachIndex == -1) {
-      return [strand];
-    }
+    int? attachIndex = strand.bases.indexWhere((base) => base == attachesTo);
+    if (attachIndex == -1) attachIndex = null;
     final strandProcessing = StrandProcessing(strand, attachIndex);
     for (final aminoAcid in aminoAcids) {
+      if (strandProcessing.currentIndex == null) {
+        break;
+      }
       aminoAcid.process(strandProcessing);
     }
     return strandProcessing.getStrands();
